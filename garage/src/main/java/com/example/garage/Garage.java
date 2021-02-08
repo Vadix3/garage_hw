@@ -1,5 +1,12 @@
 package com.example.garage;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Garage {
@@ -20,6 +27,16 @@ public class Garage {
 
     public ArrayList<String> getCars() {
         return cars;
+    }
+
+    @Override
+    public String toString() {
+        return "Garage{" +
+                "cars=" + cars +
+                ", openStatus=" + openStatus +
+                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public Garage setCars(ArrayList<String> cars) {
@@ -53,4 +70,5 @@ public class Garage {
         this.name = name;
         return this;
     }
+
 }

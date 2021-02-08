@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 
 public interface GarageAPI {
 
-    @GET("garage")
+    @GET("WypPzJCt")
     Call<Garage> loadGarage();
 
 }

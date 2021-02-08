@@ -17,14 +17,16 @@ public class Activity_Garage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_garage);
+        GarageController controller = new GarageController();
+        controller.start();
 
-        new GarageController().fetchGarage(new GarageController.Callback_Garage() {
-            @Override
-            public void garage(Garage garage) {
-                testText.setText(garage.toString());
-                Log.d(TAG, "garage: "+garage.toString());
-            }
-        });
+//        new GarageController().fetchGarage(new GarageController.Callback_Garage() {
+//            @Override
+//            public void garage(Garage garage) {
+//                testText.setText(garage.toString());
+//                Log.d(TAG, "garage: "+garage.toString());
+//            }
+//        });
 
     }
 
