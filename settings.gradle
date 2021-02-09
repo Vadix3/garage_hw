@@ -1,3 +1,4 @@
+include ':customers'
 include ':garage'
 include ':employees'
 rootProject.name = "garage_hw"

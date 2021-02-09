@@ -5,70 +5,67 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Garage {
 
-//     * "Cars":["Kia Picanto","Hyundai i30","Mercedes E"]  --> Cars string array
-// * ,"open":true --> Boolean openStatus
-// * ,"address":"Hamasger 45/15" --> String address
-// * ,"name":"Millennium Leasing" --> String storeName
-// * }
-
-    private ArrayList<String> cars;
-    private Boolean openStatus;
+    @SerializedName("Cars")
+    @Expose
+    private List<String> cars = null;
+    @SerializedName("open")
+    @Expose
+    private Boolean open;
+    @SerializedName("address")
+    @Expose
     private String address;
+    @SerializedName("name")
+    @Expose
     private String name;
 
-    public Garage() {
-    }
-
-    public ArrayList<String> getCars() {
+    public List<String> getCars() {
         return cars;
     }
 
-    @Override
-    public String toString() {
-        return "Garage{" +
-                "cars=" + cars +
-                ", openStatus=" + openStatus +
-                ", address='" + address + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public Garage setCars(ArrayList<String> cars) {
+    public void setCars(List<String> cars) {
         this.cars = cars;
-        return this;
     }
 
-    public Boolean getOpenStatus() {
-        return openStatus;
+    public Boolean getOpen() {
+        return open;
     }
 
-    public Garage setOpenStatus(Boolean openStatus) {
-        this.openStatus = openStatus;
-        return this;
+    public void setOpen(Boolean open) {
+        this.open = open;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public Garage setAddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public Garage setName(String name) {
-        this.name = name;
-        return this;
+    @Override
+    public String toString() {
+        return "Garage{" +
+                "cars=" + cars +
+                ", open=" + open +
+                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

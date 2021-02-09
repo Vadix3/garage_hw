@@ -17,7 +17,11 @@ public class GarageController implements Callback<Garage> {
     public static final String API_URL = "https://pastebin.com/raw/";
     private static final String TAG = "myTag";
 
-    public void start() {
+    private Garage myGarage = null;
+    private CallBack_Garage callBack_garage;
+
+    public void start(CallBack_Garage callBack_garage) {
+        this.callBack_garage = callBack_garage;
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -47,13 +51,15 @@ public class GarageController implements Callback<Garage> {
         if (response.isSuccessful()) {
             Garage garage = response.body();
 
-            Log.d(TAG, "onResponseGarage: " + garage.toString());
+            if (callBack_garage != null) {
+                callBack_garage.getGarage(garage);
+            }
         } else {
             Log.d(TAG, "onResponseError: " + response.toString());
         }
     }
 
-    public interface Callback_Garage {
-        void garage(Garage garage);
+    public interface CallBack_Garage {
+        void getGarage(Garage garage);
     }
 }
