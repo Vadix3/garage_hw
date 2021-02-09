@@ -8,7 +8,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.room.Room;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Activity_Garage extends AppCompatActivity {
@@ -19,12 +21,18 @@ public class Activity_Garage extends AppCompatActivity {
     private ConstraintLayout layout;
     private Garage myGarage = null;
 
+    private long startTimeStamp = 0;
+    private long endTimeStamp = 0;
+    private long sessionDuration = 0;
+
     private TextView garageName;
     private TextView openStatus;
     private TextView garageAddress;
     private TextView appType;
+    private TextView usageTime;
     private ListView carsList;
 
+    AppDatabase appDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +41,65 @@ public class Activity_Garage extends AppCompatActivity {
 
         // init views
         initViews();
+        timeLogger();
         getGarageDetails();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        logSessionTime();
+    }
+
+
+    private void logSessionTime() {
+        Log.d(TAG, "logSessionTime: ");
+        endTimeStamp = System.currentTimeMillis();
+        sessionDuration = endTimeStamp - startTimeStamp;
+
+        final TLog tLog = new TLog("Session", startTimeStamp, endTimeStamp, sessionDuration);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                appDatabase.tLogDao().insertAll(tLog);
+                Log.d(TAG, "run: tlog: " + tLog.toString());
+            }
+        }).start();
+    }
+
+    public void getAllLogs() {
+        Log.d(TAG, "getAllLogs: ");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int totalseconds = 0;
+                List<TLog> tLogs = appDatabase.tLogDao().getAll();
+                Log.d(TAG, "run: Im here! with array size: " + tLogs.size());
+                for (TLog log : tLogs) {
+                    Log.d(TAG, log.toString());
+                    totalseconds += (log.duration / 1000);
+                }
+                Log.d(TAG, "run: Total seconds: " + totalseconds);
+                final String str = "Total usage time: " + totalseconds + " seconds";
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        usageTime.setText(str);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * A method to handle the time logging stuff
+     */
+    private void timeLogger() {
+        Log.d(TAG, "timeLogger: ");
+        appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "TlogsDB.db").build();
+        getAllLogs();
+        startTimeStamp = System.currentTimeMillis();
     }
 
     /**
@@ -89,7 +155,6 @@ public class Activity_Garage extends AppCompatActivity {
     }
 
     protected void setAppColor(int color) {
-        Log.d(TAG, "setAppColor: " + color);
         layout.setBackgroundColor(color);
     }
 
@@ -104,6 +169,7 @@ public class Activity_Garage extends AppCompatActivity {
         carsList = findViewById(R.id.main_LST_carsList);
         appType = findViewById(R.id.main_LBL_appType);
         layout = findViewById(R.id.main_LAY_mainLayout);
+        usageTime = findViewById(R.id.main_LBL_usageTime);
     }
 
 }
